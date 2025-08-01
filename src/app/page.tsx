@@ -35,6 +35,15 @@ const Translator: FC = () => {
     }
   }, []);
 
+  const handleOfflineToggle = useCallback((offline: boolean) => {
+    setIsOffline(offline);
+    if (offline) {
+      toast({ title: "Offline mode enabled", description: "Translations will be loaded from cache." });
+    } else {
+      toast({ title: "Online mode enabled", description: "Connected to translation service." });
+    }
+  }, [toast]);
+
   const handleTranslate = useCallback(() => {
     if (!inputText.trim()) return;
 
@@ -136,7 +145,7 @@ const Translator: FC = () => {
         history={history} 
         onHistoryItemClick={loadFromHistory}
         isOffline={isOffline}
-        onOfflineToggle={setIsOffline} 
+        onOfflineToggle={handleOfflineToggle} 
       />
       <main className="w-full max-w-4xl flex-1 flex flex-col justify-center">
         <Card className="shadow-2xl rounded-2xl overflow-hidden">
