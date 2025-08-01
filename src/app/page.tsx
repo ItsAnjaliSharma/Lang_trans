@@ -52,13 +52,23 @@ const Translator: FC = () => {
   }, []);
   
   const handleOfflineToggle = useCallback((offline: boolean) => {
-    setIsOffline(offline);
-    if (offline) {
-      toast({ title: "Offline mode enabled", description: "Translations will be loaded from cache." });
-    } else {
-      toast({ title: "Online mode enabled", description: "Connected to translation service." });
-    }
+    setIsOffline((prev) => {
+      if (prev === offline) return prev; // prevent unnecessary re-renders
+      if (offline) {
+        toast({
+          title: "Offline mode enabled",
+          description: "Translations will be loaded from cache.",
+        });
+      } else {
+        toast({
+          title: "Online mode enabled",
+          description: "Connected to translation service.",
+        });
+      }
+      return offline;
+    });
   }, [toast]);
+  
 
   const handleTranslate = useCallback(() => {
     if (!inputText.trim()) return;
@@ -113,7 +123,7 @@ const Translator: FC = () => {
         setOfflineCache(newOfflineCache);
       }
     });
-  }, [inputText, targetLang.code, sourceLang.code, isOffline, offlineCache, toast, history, setHistory, setOfflineCache, sourceLang]);
+  }, [inputText, targetLang, sourceLang, isOffline, offlineCache, toast, history, setHistory, setOfflineCache]);
 
   const handleSwapLanguages = useCallback(() => {
     if (sourceLang.code === 'auto') {
