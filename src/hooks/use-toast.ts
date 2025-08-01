@@ -1,3 +1,4 @@
+
 "use client"
 
 // Inspired by react-hot-toast library
@@ -74,7 +75,7 @@ const addToRemoveQueue = (toastId: string) => {
   toastTimeouts.set(toastId, timeout)
 }
 
-export const reducer = (state: State, action: Action): State => {
+const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case "ADD_TOAST":
       return {
@@ -186,8 +187,14 @@ function useToast() {
 
   return {
     ...state,
-    toast,
-    dismiss: (toastId?: string) => dispatch({ type: "DISMISS_TOAST", toastId }),
+    toast: React.useCallback(
+      (props: Toast) => toast(props),
+      []
+    ),
+    dismiss: React.useCallback(
+      (toastId?: string) => dispatch({ type: "DISMISS_TOAST", toastId }),
+      []
+    ),
   }
 }
 

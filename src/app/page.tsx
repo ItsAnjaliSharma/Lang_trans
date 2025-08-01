@@ -2,7 +2,7 @@
 'use client';
 
 import type { FC } from 'react';
-import React, from 'react';
+import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -65,7 +65,7 @@ const Translator: FC = () => {
 
   const handleTranslate = React.useCallback(() => {
     if (!inputText.trim()) return;
-
+  
     if (isOffline) {
       const cacheKey = `${sourceLang.code}-${targetLang.code}:${inputText}`;
       const cachedTranslation = offlineCache[cacheKey];
@@ -81,11 +81,11 @@ const Translator: FC = () => {
       }
       return;
     }
-
+  
     startTranslation(async () => {
       setDetectedLang(null);
       const result = await getTranslation(inputText, targetLang.code, sourceLang.code);
-
+  
       if (result.error) {
         toast({
           title: 'Error',
@@ -108,8 +108,9 @@ const Translator: FC = () => {
           sourceText: inputText,
           translatedText: translation,
         };
+        
         setHistory(prevHistory => [newTranslation, ...prevHistory.slice(0, 49)]);
-
+  
         const cacheKey = `${sourceLang.code}-${targetLang.code}:${inputText}`;
         setOfflineCache(prevCache => ({...prevCache, [cacheKey]: translation}));
       }
@@ -262,5 +263,3 @@ const Translator: FC = () => {
 };
 
 export default Translator;
-
-    
