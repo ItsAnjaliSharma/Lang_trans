@@ -182,7 +182,6 @@ const Translator: FC = () => {
                 <LanguageSelector
                   selectedLang={sourceLang}
                   onLangChange={onSourceLangChange}
-                  languages={LANGUAGES}
                   showAutoDetect
                 />
                 <div className="relative flex-1">
@@ -216,7 +215,6 @@ const Translator: FC = () => {
                 <LanguageSelector
                   selectedLang={targetLang}
                   onLangChange={onTargetLangChange}
-                  languages={LANGUAGES}
                 />
                  <div className="relative flex-1">
                   <Textarea

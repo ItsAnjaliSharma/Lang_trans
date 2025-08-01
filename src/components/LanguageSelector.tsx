@@ -9,17 +9,17 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import type { Language } from '@/types';
+import { LANGUAGES } from '@/lib/languages';
 
 interface LanguageSelectorProps {
   selectedLang: Language;
   onLangChange: (lang: Language) => void;
-  languages: Language[];
   showAutoDetect?: boolean;
 }
 
-export function LanguageSelector({ selectedLang, onLangChange, languages, showAutoDetect = false }: LanguageSelectorProps) {
+export function LanguageSelector({ selectedLang, onLangChange, showAutoDetect = false }: LanguageSelectorProps) {
   const handleValueChange = (code: string) => {
-    const lang = languages.find(l => l.code === code);
+    const lang = LANGUAGES.find(l => l.code === code);
     if (lang) {
       onLangChange(lang);
     }
@@ -32,7 +32,7 @@ export function LanguageSelector({ selectedLang, onLangChange, languages, showAu
       </SelectTrigger>
       <SelectContent>
         {showAutoDetect && <SelectItem value="auto">Auto-detect</SelectItem>}
-        {languages
+        {LANGUAGES
           .filter(lang => lang.code !== 'auto')
           .map((lang) => (
             <SelectItem key={lang.code} value={lang.code}>
