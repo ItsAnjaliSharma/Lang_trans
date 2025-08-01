@@ -64,7 +64,7 @@ const Translator: FC = () => {
         description: "Connected to translation service.",
       });
     }
-  }, [toast]);
+  }, [toast, setIsOffline]);
   
 
   const handleTranslate = useCallback(() => {
@@ -151,7 +151,7 @@ const Translator: FC = () => {
     setInputText(item.sourceText);
     setTranslatedText(item.translatedText);
     setDetectedLang(null);
-  }, []);
+  }, [setSourceLang, setTargetLang, setInputText, setTranslatedText, setDetectedLang]);
   
   const speak = useCallback((text: string, lang: string) => {
     if ('speechSynthesis' in window && text) {
