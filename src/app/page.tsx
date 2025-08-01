@@ -45,7 +45,7 @@ const Translator: FC = () => {
         window.removeEventListener('offline', handleOffline);
       };
     }
-  }, []);
+  }, [isOffline]);
   
   const handleOfflineToggle = useCallback((offline: boolean) => {
     setIsOffline(offline);

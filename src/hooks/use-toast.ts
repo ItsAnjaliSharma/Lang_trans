@@ -135,9 +135,9 @@ let memoryState: State = { toasts: [] }
 
 function dispatch(action: Action) {
   memoryState = reducer(memoryState, action)
-  listeners.forEach((listener) => {
+  for (const listener of listeners) {
     listener(memoryState)
-  })
+  }
 }
 
 type Toast = Omit<ToasterToast, "id">
@@ -186,14 +186,8 @@ function useToast() {
 
   return {
     ...state,
-    toast: React.useCallback(
-      (props: Toast) => toast(props),
-      []
-    ),
-    dismiss: React.useCallback(
-      (toastId?: string) => dispatch({ type: "DISMISS_TOAST", toastId }),
-      []
-    ),
+    toast,
+    dismiss: (toastId?: string) => dispatch({ type: "DISMISS_TOAST", toastId }),
   }
 }
 
