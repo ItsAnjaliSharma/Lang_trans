@@ -32,9 +32,20 @@ const Translator: FC = () => {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setIsOffline(!window.navigator.onLine);
+      
+      const handleOnline = () => setIsOffline(false);
+      const handleOffline = () => setIsOffline(true);
+
+      window.addEventListener('online', handleOnline);
+      window.addEventListener('offline', handleOffline);
+
+      return () => {
+        window.removeEventListener('online', handleOnline);
+        window.removeEventListener('offline', handleOffline);
+      };
     }
   }, []);
-
+  
   const handleOfflineToggle = useCallback((offline: boolean) => {
     setIsOffline(offline);
     if (offline) {
