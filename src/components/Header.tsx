@@ -12,7 +12,7 @@ interface HeaderProps {
   history: Translation[];
   onHistoryItemClick: (item: Translation) => void;
   isOffline: boolean;
-  onOfflineToggle: (isOffline: boolean) => void;
+  onOfflineToggle: (offline: boolean) => void;
 }
 
 export function Header({ history, onHistoryItemClick, isOffline, onOfflineToggle }: HeaderProps) {

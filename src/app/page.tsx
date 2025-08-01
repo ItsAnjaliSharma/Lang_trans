@@ -120,7 +120,7 @@ const Translator: FC = () => {
         setOfflineCache(newOfflineCache);
       }
     });
-  }, [inputText, targetLang.code, sourceLang.code, isOffline, offlineCache, toast, history, setHistory, setOfflineCache, setDetectedLang, setTranslatedText]);
+  }, [inputText, targetLang.code, sourceLang.code, isOffline, offlineCache, toast, history, setHistory, setOfflineCache]);
 
   const handleSwapLanguages = useCallback(() => {
     if (sourceLang.code === 'auto') {
@@ -132,7 +132,7 @@ const Translator: FC = () => {
     setInputText(translatedText);
     setTranslatedText(inputText);
     setDetectedLang(null);
-  }, [inputText, translatedText, sourceLang, targetLang, toast, setSourceLang, setTargetLang, setInputText, setTranslatedText, setDetectedLang]);
+  }, [inputText, translatedText, sourceLang, targetLang, toast]);
 
   const handleCopy = useCallback((text: string, type: 'source' | 'translated') => {
     if (!text) return;
@@ -151,7 +151,7 @@ const Translator: FC = () => {
     setInputText(item.sourceText);
     setTranslatedText(item.translatedText);
     setDetectedLang(null);
-  }, [setSourceLang, setTargetLang, setInputText, setTranslatedText, setDetectedLang]);
+  }, []);
   
   const speak = useCallback((text: string, lang: string) => {
     if ('speechSynthesis' in window && text) {
