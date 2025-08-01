@@ -108,7 +108,7 @@ const Translator: FC = () => {
     });
   }, [inputText, targetLang, sourceLang, isOffline, offlineCache, setOfflineCache, history, setHistory, toast]);
 
-  const handleSwapLanguages = () => {
+  const handleSwapLanguages = useCallback(() => {
     if (sourceLang.code === 'auto') {
         toast({ title: "Cannot swap with 'Auto-detect'", description: "Please select a specific source language to swap."});
         return;
@@ -118,17 +118,17 @@ const Translator: FC = () => {
     setSourceLang(targetLang);
     setTargetLang(sourceLang);
     setDetectedLang(null);
-  };
+  }, [inputText, translatedText, sourceLang, targetLang, toast]);
 
-  const handleCopy = (text: string, type: 'source' | 'translated') => {
+  const handleCopy = useCallback((text: string, type: 'source' | 'translated') => {
     navigator.clipboard.writeText(text).then(() => {
       toast({ title: `Copied ${type} text to clipboard` });
     }).catch(err => {
       toast({ title: 'Copy failed', description: err.message, variant: 'destructive' });
     });
-  };
+  }, [toast]);
   
-  const loadFromHistory = (item: Translation) => {
+  const loadFromHistory = useCallback((item: Translation) => {
     const source = LANGUAGES.find(l => l.code === item.sourceLang) || DEFAULT_SOURCE_LANG;
     const target = LANGUAGES.find(l => l.code === item.targetLang) || DEFAULT_TARGET_LANG;
     setSourceLang(source);
@@ -136,9 +136,9 @@ const Translator: FC = () => {
     setInputText(item.sourceText);
     setTranslatedText(item.translatedText);
     setDetectedLang(null);
-  };
+  }, []);
   
-  const speak = (text: string, lang: string) => {
+  const speak = useCallback((text: string, lang: string) => {
     if ('speechSynthesis' in window && text) {
         const utterance = new SpeechSynthesisUtterance(text);
         if(lang !== 'auto') {
@@ -148,7 +148,7 @@ const Translator: FC = () => {
     } else {
         toast({ title: 'Text-to-speech not supported or no text to speak.' });
     }
-  };
+  }, [toast]);
 
   return (
     <div className="flex-1 flex flex-col items-center p-4 md:p-6 bg-background">
