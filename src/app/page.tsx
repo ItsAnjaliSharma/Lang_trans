@@ -108,7 +108,7 @@ const Translator: FC = () => {
         setOfflineCache(newOfflineCache);
       }
     });
-  }, [inputText, targetLang.code, sourceLang.code, isOffline, offlineCache, toast, history, setHistory, setOfflineCache]);
+  }, [inputText, targetLang.code, sourceLang.code, isOffline, offlineCache, toast, history, setHistory, setOfflineCache, sourceLang]);
 
   const handleSwapLanguages = useCallback(() => {
     if (sourceLang.code === 'auto') {
