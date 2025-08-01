@@ -100,13 +100,15 @@ const Translator: FC = () => {
           sourceText: inputText,
           translatedText: translation,
         };
-        setHistory([newTranslation, ...history.slice(0, 49)]);
+        const newHistory = [newTranslation, ...history.slice(0, 49)];
+        setHistory(newHistory);
 
         const cacheKey = `${sourceLang.code}-${targetLang.code}:${inputText}`;
-        setOfflineCache({...offlineCache, [cacheKey]: translation});
+        const newOfflineCache = {...offlineCache, [cacheKey]: translation};
+        setOfflineCache(newOfflineCache);
       }
     });
-  }, [inputText, targetLang, sourceLang, isOffline, offlineCache, setOfflineCache, history, setHistory, toast]);
+  }, [inputText, targetLang.code, sourceLang.code, isOffline, offlineCache, toast, history, setHistory, setOfflineCache]);
 
   const handleSwapLanguages = useCallback(() => {
     if (sourceLang.code === 'auto') {
