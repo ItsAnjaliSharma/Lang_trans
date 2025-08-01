@@ -120,7 +120,7 @@ const Translator: FC = () => {
         setOfflineCache(newOfflineCache);
       }
     });
-  }, [inputText, targetLang.code, sourceLang.code, isOffline, offlineCache, toast, history, setHistory, setOfflineCache]);
+  }, [inputText, targetLang.code, sourceLang.code, isOffline, offlineCache, toast, history, setHistory, setOfflineCache, setDetectedLang, setTranslatedText]);
 
   const handleSwapLanguages = useCallback(() => {
     if (sourceLang.code === 'auto') {
@@ -132,7 +132,7 @@ const Translator: FC = () => {
     setInputText(translatedText);
     setTranslatedText(inputText);
     setDetectedLang(null);
-  }, [inputText, translatedText, sourceLang, targetLang, toast]);
+  }, [inputText, translatedText, sourceLang, targetLang, toast, setSourceLang, setTargetLang, setInputText, setTranslatedText, setDetectedLang]);
 
   const handleCopy = useCallback((text: string, type: 'source' | 'translated') => {
     if (!text) return;
