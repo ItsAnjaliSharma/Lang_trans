@@ -1,3 +1,4 @@
+
 'use client';
 
 import type { FC } from 'react';
@@ -31,7 +32,11 @@ const Translator: FC = () => {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      setIsOffline(!window.navigator.onLine);
+      const getOnlineStatus = () => {
+        return window.navigator.onLine;
+      };
+
+      setIsOffline(!getOnlineStatus());
       
       const handleOnline = () => setIsOffline(false);
       const handleOffline = () => setIsOffline(true);
@@ -115,14 +120,15 @@ const Translator: FC = () => {
         toast({ title: "Cannot swap with 'Auto-detect'", description: "Please select a specific source language to swap."});
         return;
     }
-    setInputText(translatedText);
-    setTranslatedText(inputText);
     setSourceLang(targetLang);
     setTargetLang(sourceLang);
+    setInputText(translatedText);
+    setTranslatedText(inputText);
     setDetectedLang(null);
   }, [inputText, translatedText, sourceLang, targetLang, toast]);
 
   const handleCopy = useCallback((text: string, type: 'source' | 'translated') => {
+    if (!text) return;
     navigator.clipboard.writeText(text).then(() => {
       toast({ title: `Copied ${type} text to clipboard` });
     }).catch(err => {
