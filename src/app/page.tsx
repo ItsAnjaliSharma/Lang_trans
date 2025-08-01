@@ -106,8 +106,20 @@ const Translator: FC = () => {
   React.useEffect(() => {
     if (typeof window === 'undefined') return;
     
-    const handleOnline = () => setIsOffline(false);
-    const handleOffline = () => setIsOffline(true);
+    const handleOnline = () => {
+      setIsOffline(false);
+      toast({
+        title: "You are back online!",
+        description: "Connected to translation service.",
+      });
+    }
+    const handleOffline = () => {
+      setIsOffline(true);
+      toast({
+        title: "You are currently offline",
+        description: "Only cached translations will be available.",
+      });
+    }
     
     setIsOffline(!window.navigator.onLine);
 
@@ -118,24 +130,8 @@ const Translator: FC = () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
     };
-  }, []);
-  
-  const handleOfflineToggle = useCallback((offline: boolean) => {
-    setIsOffline(offline);
-    if (offline) {
-      toast({
-        title: "Offline mode enabled",
-        description: "Translations will be loaded from cache.",
-      });
-    } else {
-      toast({
-        title: "Online mode enabled",
-        description: "Connected to translation service.",
-      });
-    }
   }, [toast]);
   
-
   const handleTranslate = useCallback(() => {
     if (!inputText.trim()) return;
   
@@ -147,7 +143,7 @@ const Translator: FC = () => {
         toast({ title: "Translated from offline cache." });
       } else {
         toast({
-          title: "Offline Mode",
+          title: "Offline",
           description: "This translation is not available in your offline cache.",
           variant: "destructive"
         });
@@ -174,18 +170,21 @@ const Translator: FC = () => {
             setDetectedLang(`Detected: ${detectedLangName} (Confidence: ${Math.round(confidence * 100)}%)`);
         }
         
-        const newTranslation: Translation = {
-          id: new Date().toISOString(),
-          sourceLang: sourceLang.code,
-          targetLang: targetLang.code,
-          sourceText: inputText,
-          translatedText: translation,
-        };
-        
-        setHistory(prevHistory => [newTranslation, ...prevHistory.slice(0, 49)]);
+        setHistory(prevHistory => {
+          const newTranslation: Translation = {
+            id: new Date().toISOString(),
+            sourceLang: sourceLang.code,
+            targetLang: targetLang.code,
+            sourceText: inputText,
+            translatedText: translation,
+          };
+          return [newTranslation, ...prevHistory.slice(0, 49)];
+        });
   
-        const cacheKey = `${sourceLang.code}-${targetLang.code}:${inputText}`;
-        setOfflineCache(prevCache => ({...prevCache, [cacheKey]: translation}));
+        setOfflineCache(prevCache => {
+          const cacheKey = `${sourceLang.code}-${targetLang.code}:${inputText}`;
+          return {...prevCache, [cacheKey]: translation};
+        });
       }
     });
   }, [inputText, targetLang.code, sourceLang.code, isOffline, offlineCache, toast, setHistory, setOfflineCache, startTranslation]);
@@ -250,7 +249,6 @@ const Translator: FC = () => {
         history={history} 
         onHistoryItemClick={loadFromHistory}
         isOffline={isOffline}
-        onOfflineToggle={handleOfflineToggle} 
       />
       <main className="w-full max-w-4xl flex-1 flex flex-col justify-center">
         <Card className="shadow-2xl rounded-2xl overflow-hidden">
