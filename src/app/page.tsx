@@ -60,7 +60,7 @@ const Translator: FC = () => {
         description: "Connected to translation service.",
       });
     }
-  }, [toast, setIsOffline]);
+  }, [toast]);
   
 
   const handleTranslate = useCallback(() => {
@@ -257,3 +257,5 @@ const Translator: FC = () => {
 };
 
 export default Translator;
+
+    
