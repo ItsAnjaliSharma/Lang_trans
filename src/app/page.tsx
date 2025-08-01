@@ -2,8 +2,8 @@
 'use client';
 
 import type { FC } from 'react';
-import React, { useCallback } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import React, { useCallback } from 'react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { LanguageSelector } from '@/components/LanguageSelector';
@@ -17,6 +17,79 @@ import { getTranslation } from './actions';
 
 const DEFAULT_SOURCE_LANG: Language = { code: 'auto', name: 'Auto-detect' };
 const DEFAULT_TARGET_LANG: Language = { code: 'es', name: 'Spanish' };
+
+const ApiDocs: FC = () => {
+    const [origin, setOrigin] = React.useState('');
+    React.useEffect(() => {
+        if (typeof window !== 'undefined') {
+            setOrigin(window.location.origin);
+        }
+    }, []);
+
+    const curlExample = `curl -X POST -H "Content-Type: application/json" \\
+  -d '{"text": "<h1>Hello World</h1>", "targetLanguage": "es"}' \\
+  '${origin}/api/translate'`;
+
+    const fetchExample = `fetch('${origin}/api/translate', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    text: '<h1>Hello World</h1><p>This is a paragraph.</p>',
+    targetLanguage: 'es'
+  })
+})
+.then(res => res.json())
+.then(console.log);`;
+
+    return (
+        <Card className="shadow-2xl rounded-2xl overflow-hidden mt-8">
+            <CardHeader>
+                <CardTitle>For Developers: Use the API</CardTitle>
+                <CardDescription>
+                    Integrate our translation power into your own projects with a simple API call.
+                </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6 text-sm">
+                <div>
+                    <h3 className="font-semibold text-base mb-2">Endpoint</h3>
+                    <div className="p-3 bg-secondary/50 rounded-md">
+                        <code className="font-mono text-primary font-bold">POST {origin}/api/translate</code>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 className="font-semibold text-base mb-2">Request Body (JSON)</h3>
+                    <div className="p-3 bg-secondary/50 rounded-md">
+                        <pre className="whitespace-pre-wrap font-mono">
+                            {`{\n  "text": "<p>Your HTML or plain text here...</p>",\n  "targetLanguage": "es" // See language codes above\n}`}
+                        </pre>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 className="font-semibold text-base mb-2">Example: cURL</h3>
+                     <div className="relative p-3 bg-secondary/50 rounded-md">
+                        <pre className="whitespace-pre-wrap font-mono">{curlExample}</pre>
+                        <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-7 w-7" onClick={() => navigator.clipboard.writeText(curlExample)}>
+                            <Copy className="h-4 w-4" />
+                        </Button>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 className="font-semibold text-base mb-2">Example: JavaScript Fetch</h3>
+                     <div className="relative p-3 bg-secondary/50 rounded-md">
+                        <pre className="whitespace-pre-wrap font-mono">{fetchExample}</pre>
+                        <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-7 w-7" onClick={() => navigator.clipboard.writeText(fetchExample)}>
+                            <Copy className="h-4 w-4" />
+                        </Button>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+    );
+};
+
 
 const Translator: FC = () => {
   const [inputText, setInputText] = React.useState('');
@@ -162,8 +235,14 @@ const Translator: FC = () => {
     }
   }, [toast]);
 
-  const onSourceLangChange = useCallback((lang: Language) => setSourceLang(lang), []);
-  const onTargetLangChange = useCallback((lang: Language) => setTargetLang(lang), []);
+  const onSourceLangChange = useCallback((lang: Language) => {
+    setSourceLang(lang);
+  }, []);
+
+  const onTargetLangChange = useCallback((lang: Language) => {
+    setTargetLang(lang);
+  }, []);
+
 
   return (
     <div className="flex-1 flex flex-col items-center p-4 md:p-6 bg-background">
@@ -252,6 +331,9 @@ const Translator: FC = () => {
             </div>
           </CardContent>
         </Card>
+        
+        <ApiDocs />
+
         <footer className="text-center mt-6 text-sm text-muted-foreground">
             <p>Powered by AI. Built for the modern web.</p>
         </footer>
