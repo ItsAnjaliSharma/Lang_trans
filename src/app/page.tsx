@@ -64,7 +64,7 @@ const Translator: FC = () => {
         description: "Connected to translation service.",
       });
     }
-  }, [toast, setIsOffline]);
+  }, [toast]);
   
 
   const handleTranslate = useCallback(() => {
@@ -112,15 +112,13 @@ const Translator: FC = () => {
           sourceText: inputText,
           translatedText: translation,
         };
-        const newHistory = [newTranslation, ...history.slice(0, 49)];
-        setHistory(newHistory);
+        setHistory(prevHistory => [newTranslation, ...prevHistory.slice(0, 49)]);
 
         const cacheKey = `${sourceLang.code}-${targetLang.code}:${inputText}`;
-        const newOfflineCache = {...offlineCache, [cacheKey]: translation};
-        setOfflineCache(newOfflineCache);
+        setOfflineCache(prevCache => ({...prevCache, [cacheKey]: translation}));
       }
     });
-  }, [inputText, targetLang.code, sourceLang.code, isOffline, offlineCache, toast, history, setHistory, setOfflineCache]);
+  }, [inputText, targetLang.code, sourceLang.code, isOffline, offlineCache, toast, setHistory, setOfflineCache]);
 
   const handleSwapLanguages = useCallback(() => {
     if (sourceLang.code === 'auto') {
