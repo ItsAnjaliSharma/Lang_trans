@@ -33,7 +33,7 @@ const translationPrompt = ai.definePrompt({
   name: 'translationPrompt',
   input: {schema: z.object({text: z.string(), targetLanguage: z.string()})},
   output: {schema: z.object({translation: z.string()})},
-  prompt: `Translate the following text to {{targetLanguage}}:\n\nText: {{{text}}}`,
+  prompt: `You are an expert translator. Translate the text content within the following HTML to {{targetLanguage}}. It is crucial that you preserve all HTML tags, attributes, and the overall structure of the document. Only translate the human-readable text content found between the tags.\n\nHTML: {{{text}}}`,
 });
 
 const smartTranslateFlow = ai.defineFlow(
