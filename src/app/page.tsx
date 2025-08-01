@@ -121,8 +121,10 @@ const Translator: FC = () => {
         toast({ title: "Cannot swap with 'Auto-detect'", description: "Please select a specific source language to swap."});
         return;
     }
-    setSourceLang(targetLang);
-    setTargetLang(sourceLang);
+    const currentSource = sourceLang;
+    const currentTarget = targetLang;
+    setSourceLang(currentTarget);
+    setTargetLang(currentSource);
     setInputText(translatedText);
     setTranslatedText(inputText);
     setDetectedLang(null);
@@ -159,6 +161,9 @@ const Translator: FC = () => {
     }
   }, [toast]);
 
+  const onSourceLangChange = useCallback((lang: Language) => setSourceLang(lang), []);
+  const onTargetLangChange = useCallback((lang: Language) => setTargetLang(lang), []);
+
   return (
     <div className="flex-1 flex flex-col items-center p-4 md:p-6 bg-background">
       <Header 
@@ -175,7 +180,7 @@ const Translator: FC = () => {
               <div className="flex flex-col gap-4">
                 <LanguageSelector
                   selectedLang={sourceLang}
-                  onLangChange={setSourceLang}
+                  onLangChange={onSourceLangChange}
                   languages={LANGUAGES}
                   showAutoDetect
                 />
@@ -209,7 +214,7 @@ const Translator: FC = () => {
               <div className="flex flex-col gap-4">
                 <LanguageSelector
                   selectedLang={targetLang}
-                  onLangChange={setTargetLang}
+                  onLangChange={onTargetLangChange}
                   languages={LANGUAGES}
                 />
                  <div className="relative flex-1">
@@ -257,5 +262,3 @@ const Translator: FC = () => {
 };
 
 export default Translator;
-
-    
