@@ -32,14 +32,10 @@ const Translator: FC = () => {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const getOnlineStatus = () => {
-        return window.navigator.onLine;
-      };
-
-      setIsOffline(!getOnlineStatus());
-      
       const handleOnline = () => setIsOffline(false);
       const handleOffline = () => setIsOffline(true);
+      
+      setIsOffline(!window.navigator.onLine);
 
       window.addEventListener('online', handleOnline);
       window.addEventListener('offline', handleOffline);
@@ -64,7 +60,7 @@ const Translator: FC = () => {
         description: "Connected to translation service.",
       });
     }
-  }, [toast]);
+  }, [toast, setIsOffline]);
   
 
   const handleTranslate = useCallback(() => {
@@ -118,7 +114,7 @@ const Translator: FC = () => {
         setOfflineCache(prevCache => ({...prevCache, [cacheKey]: translation}));
       }
     });
-  }, [inputText, targetLang.code, sourceLang.code, isOffline, offlineCache, toast, setHistory, setOfflineCache]);
+  }, [inputText, targetLang.code, sourceLang.code, isOffline, offlineCache, toast, setHistory, setOfflineCache, startTranslation]);
 
   const handleSwapLanguages = useCallback(() => {
     if (sourceLang.code === 'auto') {
@@ -261,5 +257,3 @@ const Translator: FC = () => {
 };
 
 export default Translator;
-
-    
