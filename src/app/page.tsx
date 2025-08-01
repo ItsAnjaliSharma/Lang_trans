@@ -2,7 +2,7 @@
 'use client';
 
 import type { FC } from 'react';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -32,7 +32,7 @@ const Translator: FC = () => {
 
   React.useEffect(() => {
     if (typeof window === 'undefined') return;
-
+    
     const handleOnline = () => setIsOffline(false);
     const handleOffline = () => setIsOffline(true);
     
@@ -47,7 +47,7 @@ const Translator: FC = () => {
     };
   }, []);
   
-  const handleOfflineToggle = React.useCallback((offline: boolean) => {
+  const handleOfflineToggle = useCallback((offline: boolean) => {
     setIsOffline(offline);
     if (offline) {
       toast({
@@ -63,7 +63,7 @@ const Translator: FC = () => {
   }, [toast]);
   
 
-  const handleTranslate = React.useCallback(() => {
+  const handleTranslate = useCallback(() => {
     if (!inputText.trim()) return;
   
     if (isOffline) {
@@ -117,7 +117,7 @@ const Translator: FC = () => {
     });
   }, [inputText, targetLang.code, sourceLang.code, isOffline, offlineCache, toast, setHistory, setOfflineCache, startTranslation]);
 
-  const handleSwapLanguages = React.useCallback(() => {
+  const handleSwapLanguages = useCallback(() => {
     if (sourceLang.code === 'auto') {
         toast({ title: "Cannot swap with 'Auto-detect'", description: "Please select a specific source language to swap."});
         return;
@@ -131,7 +131,7 @@ const Translator: FC = () => {
     setDetectedLang(null);
   }, [inputText, translatedText, sourceLang, targetLang, toast]);
 
-  const handleCopy = React.useCallback((text: string, type: 'source' | 'translated') => {
+  const handleCopy = useCallback((text: string, type: 'source' | 'translated') => {
     if (!text) return;
     navigator.clipboard.writeText(text).then(() => {
       toast({ title: `Copied ${type} text to clipboard` });
@@ -140,7 +140,7 @@ const Translator: FC = () => {
     });
   }, [toast]);
   
-  const loadFromHistory = React.useCallback((item: Translation) => {
+  const loadFromHistory = useCallback((item: Translation) => {
     const source = LANGUAGES.find(l => l.code === item.sourceLang) || DEFAULT_SOURCE_LANG;
     const target = LANGUAGES.find(l => l.code === item.targetLang) || DEFAULT_TARGET_LANG;
     setSourceLang(source);
@@ -150,7 +150,7 @@ const Translator: FC = () => {
     setDetectedLang(null);
   }, []);
   
-  const speak = React.useCallback((text: string, lang: string) => {
+  const speak = useCallback((text: string, lang: string) => {
     if ('speechSynthesis' in window && text) {
         const utterance = new SpeechSynthesisUtterance(text);
         if(lang !== 'auto') {
@@ -162,8 +162,8 @@ const Translator: FC = () => {
     }
   }, [toast]);
 
-  const onSourceLangChange = React.useCallback((lang: Language) => setSourceLang(lang), []);
-  const onTargetLangChange = React.useCallback((lang: Language) => setTargetLang(lang), []);
+  const onSourceLangChange = useCallback((lang: Language) => setSourceLang(lang), []);
+  const onTargetLangChange = useCallback((lang: Language) => setTargetLang(lang), []);
 
   return (
     <div className="flex-1 flex flex-col items-center p-4 md:p-6 bg-background">
