@@ -2,7 +2,7 @@
 'use client';
 
 import type { FC } from 'react';
-import React, { useState, useEffect, useTransition, useCallback } from 'react';
+import React, from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -19,35 +19,35 @@ const DEFAULT_SOURCE_LANG: Language = { code: 'auto', name: 'Auto-detect' };
 const DEFAULT_TARGET_LANG: Language = { code: 'es', name: 'Spanish' };
 
 const Translator: FC = () => {
-  const [inputText, setInputText] = useState('');
-  const [translatedText, setTranslatedText] = useState('');
-  const [sourceLang, setSourceLang] = useState<Language>(DEFAULT_SOURCE_LANG);
-  const [targetLang, setTargetLang] = useState<Language>(DEFAULT_TARGET_LANG);
-  const [detectedLang, setDetectedLang] = useState<string | null>(null);
-  const [isTranslating, startTranslation] = useTransition();
+  const [inputText, setInputText] = React.useState('');
+  const [translatedText, setTranslatedText] = React.useState('');
+  const [sourceLang, setSourceLang] = React.useState<Language>(DEFAULT_SOURCE_LANG);
+  const [targetLang, setTargetLang] = React.useState<Language>(DEFAULT_TARGET_LANG);
+  const [detectedLang, setDetectedLang] = React.useState<string | null>(null);
+  const [isTranslating, startTranslation] = React.useTransition();
   const { toast } = useToast();
   const [history, setHistory] = useLocalStorage<Translation[]>('translationHistory', []);
   const [offlineCache, setOfflineCache] = useLocalStorage<Record<string, string>>('offlineCache', {});
-  const [isOffline, setIsOffline] = useState(false);
+  const [isOffline, setIsOffline] = React.useState(false);
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const handleOnline = () => setIsOffline(false);
-      const handleOffline = () => setIsOffline(true);
-      
-      setIsOffline(!window.navigator.onLine);
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return;
 
-      window.addEventListener('online', handleOnline);
-      window.addEventListener('offline', handleOffline);
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+    
+    setIsOffline(!window.navigator.onLine);
 
-      return () => {
-        window.removeEventListener('online', handleOnline);
-        window.removeEventListener('offline', handleOffline);
-      };
-    }
-  }, [isOffline]);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
   
-  const handleOfflineToggle = useCallback((offline: boolean) => {
+  const handleOfflineToggle = React.useCallback((offline: boolean) => {
     setIsOffline(offline);
     if (offline) {
       toast({
@@ -63,7 +63,7 @@ const Translator: FC = () => {
   }, [toast]);
   
 
-  const handleTranslate = useCallback(() => {
+  const handleTranslate = React.useCallback(() => {
     if (!inputText.trim()) return;
 
     if (isOffline) {
@@ -116,7 +116,7 @@ const Translator: FC = () => {
     });
   }, [inputText, targetLang.code, sourceLang.code, isOffline, offlineCache, toast, setHistory, setOfflineCache, startTranslation]);
 
-  const handleSwapLanguages = useCallback(() => {
+  const handleSwapLanguages = React.useCallback(() => {
     if (sourceLang.code === 'auto') {
         toast({ title: "Cannot swap with 'Auto-detect'", description: "Please select a specific source language to swap."});
         return;
@@ -130,7 +130,7 @@ const Translator: FC = () => {
     setDetectedLang(null);
   }, [inputText, translatedText, sourceLang, targetLang, toast]);
 
-  const handleCopy = useCallback((text: string, type: 'source' | 'translated') => {
+  const handleCopy = React.useCallback((text: string, type: 'source' | 'translated') => {
     if (!text) return;
     navigator.clipboard.writeText(text).then(() => {
       toast({ title: `Copied ${type} text to clipboard` });
@@ -139,7 +139,7 @@ const Translator: FC = () => {
     });
   }, [toast]);
   
-  const loadFromHistory = useCallback((item: Translation) => {
+  const loadFromHistory = React.useCallback((item: Translation) => {
     const source = LANGUAGES.find(l => l.code === item.sourceLang) || DEFAULT_SOURCE_LANG;
     const target = LANGUAGES.find(l => l.code === item.targetLang) || DEFAULT_TARGET_LANG;
     setSourceLang(source);
@@ -149,7 +149,7 @@ const Translator: FC = () => {
     setDetectedLang(null);
   }, []);
   
-  const speak = useCallback((text: string, lang: string) => {
+  const speak = React.useCallback((text: string, lang: string) => {
     if ('speechSynthesis' in window && text) {
         const utterance = new SpeechSynthesisUtterance(text);
         if(lang !== 'auto') {
@@ -161,8 +161,8 @@ const Translator: FC = () => {
     }
   }, [toast]);
 
-  const onSourceLangChange = useCallback((lang: Language) => setSourceLang(lang), []);
-  const onTargetLangChange = useCallback((lang: Language) => setTargetLang(lang), []);
+  const onSourceLangChange = React.useCallback((lang: Language) => setSourceLang(lang), []);
+  const onTargetLangChange = React.useCallback((lang: Language) => setTargetLang(lang), []);
 
   return (
     <div className="flex-1 flex flex-col items-center p-4 md:p-6 bg-background">
@@ -262,3 +262,5 @@ const Translator: FC = () => {
 };
 
 export default Translator;
+
+    
